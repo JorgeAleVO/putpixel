@@ -16,7 +16,7 @@ void ofApp::update()
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-	FB.draw();
+	//FB.draw();
 	FB.angle();
 }
 

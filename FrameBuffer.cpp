@@ -34,98 +34,187 @@ void FrameBuffer::clear(const ofColor& color)
 		_img.draw(ofPoint(0, 0, 0));
 }
 
-void FrameBuffer::line(int xo, int yo, int xi, int yi, const ofColor& color)
+void FrameBuffer::line(int xo, int yo, int xi, int yi)
 {
-	int angle;
-	int dy = yi - yo;
-	int dx = xi - yi;
-	int DNE = 2 * dy;
-	int DE = 2 * (dy - dx);
-	int d = 2 * dy - dx;
+	int d = 0;
+	int dy = (yi - yo);
+	int dx = (xi - xo);
+	int DNE = dy;
+	int DE = (dy - dx);
+	
 	int x = xo, y = yo;
 
-		putpixel(xo, yo, ofColor::red);	
-		
-		if (dx > dy) {
-			while (x <= xi)
+
+	if (yi >= yo && xi >= xo)
+	{
+		if (dx > dy)
+		{
+			for (int x = xo; x <= xi; x++)
 			{
-				x++;
-				if (d <= 0)
-				{
-					d = d + DNE;
-				}
-				else
-				{
+				ofColor color(255, 100, 255);
+				putpixel(x, y, color);
+
+				if (d > 0) {
 					d = d + DE;
 					y++;
 				}
-				putpixel(x, y, ofColor::blue);
+				else
+				{
+					d = d + DNE;
+
+				}
+
 			}
 		}
-		else if (dx <= dy) {
-			while (y <= yi)
+		else if (dy >= dx)
+		{
+			for (int y = yo; y <= yi; y++) {
+				{
+					ofColor color(255, 100, 255);
+					putpixel(x, y, color);
+					if (d > 0)
+					{
+						d = d + dx - DNE;
+						x++;
+					}
+					else
+					{
+						d = d + dx;
+					}
+				}
+			}
+		}
+	}
+
+	else if (yi <= yo && xi <= xo)
+	{
+		if (dy  > dx)
+		{
+			for (int x = xo; x >= xi; x--)
 			{
-				y++;
-				if (d > 0)
+				ofColor color(0, 255, 255);
+				putpixel(x, y, color);
+				if (d <= 0)
+				{
+					d = d + DE;
+					y--;
+				}
+				else
+				{
+				 d = d + DNE;
+				}
+
+			}
+		}
+		else if (dy <= dx)
+		{
+			for (int y = yo; y >= yi; y--)
+			{
+				ofColor color(100, 0, 255);
+				putpixel(x, y, color);
+				if (d <= 0)
 				{
 					d = d + dx - dy;
-					x++;
+					x--;
+				}
+				else
+				{
+				 d = d + dx;
+				}
+
+			}
+		}
+	}
+
+	else if (yi >= yo && xi <= xo)
+	{
+		if (dx > dy *-1)
+		{
+			for (int y = yo; y <= yi; y++)
+			{
+				ofColor color(255, 0, 100);
+				putpixel(x, y, color);
+				if (d <= 0)
+				{
+					d = d + dx + dy;
+					x--;
 				}
 				else
 				{
 					d = d + dx;
 				}
-				putpixel(x, y, ofColor::blue);
+
 			}
 		}
-		while (x <= xi)
+		else if (dx <= dy *-1)
 		{
-			y--;
-			if (d < 0)
+			for (int x = xo; x >= xi; x--)
 			{
-				d = d + dx;
+				ofColor color(255, 0, 0);
+				putpixel(x, y, color);
+
+				if (d < 0)
+				{
+					d = d - dx - dy;
+					y++;
+				}
+
+				else
+				{
+					d = d - dy;
+
+
+				}
+
 			}
-			else
-			{
-				d = d - DNE;
-				x++;
-			}
-			putpixel(x, y, ofColor::green);
 		}
-		while (y <= yi)
-		{
-			x--;
-			if (d <= 0)
+	}
+
+
+	else if (yi < yo && xi > xo)
+	{
+		if (dx * -1 >= dy) {
+			for (int y = yo; y >= yi; y--)
 			{
-				d = d - dy + DE;
-				y++;
+				ofColor color(0, 100, 255);
+				putpixel(x, y, color);
+				if (d > 0)
+				{
+					d = d + dx +DNE;
+					x++;
+				}
+				else
+				{
+					d = d + dx;
+
+				}
+
 			}
-			else
-			{
-				d = d - dy;
-			}
-			putpixel(x, y, ofColor::blue);
 		}
-		while (x <= xi)
-		{
-			x++;
-			if (d > 0)
+		else if (dy >= dx*-1) {
+			for (int x = xo; x <= xi; x++)
 			{
-				d = d + dx + DE + dy;
-				y--;
+				ofColor color(0, 100, 255);
+				putpixel(x, y, color);
+				if (d > 0)
+				{
+					d = d - dy - dx;
+					y--;
+				}
+				else
+				{
+					d = d - dy ;
+				}
+
 			}
-			else
-			{
-				d = d + dx + DNE - dy;
-			}
-			putpixel(x, y, ofColor::blue);
 		}
+	}
 }
 
 void FrameBuffer::angle()
 {
-	int xc = 512;
-	int yc = 384;
+	int xc = ofGetWidth() / 2;
+	int yc = ofGetHeight() / 2;
 	int xo = 0;
 	int yo = 0;
 
@@ -134,8 +223,9 @@ void FrameBuffer::angle()
 		int xi = 100 * cos(angle*PI / 180.0);
 		int yi = 100 * sin(angle*PI / 180.0);
 
-		line(xo + xc, yo + yc, xi + xc, yi + yc, ofColor::blue);
+		line(xo + xc, yo + yc, xi + xc, yi + yc);
 	}
+
 }
 
 //void FrameBuffer::circle(const int& h, const int& k, const int& r)
@@ -145,15 +235,17 @@ void FrameBuffer::angle()
 //	int g = 1 - r;
 //	int GE = 2; x + 3;
 //	int GSE = 2; x - 2; y + 5;
+//
+// ofColor color ( 0, 100, 255);
 //	
-//	putpixel(y, x, ofColor::green);
-//	putpixel(x, y, ofColor::green);
-//	putpixel(-x, y, ofColor::green);
-//	putpixel(-y, x, ofColor::green);
-//	putpixel(-y, -x, ofColor::green);
-//	putpixel(-x, -y, ofColor::green);
-//	putpixel(x, -y, ofColor::green);
-//	putpixel(y, -x, ofColor::green);
+//	putpixel(y, x, color);
+//	putpixel(x, y, color);
+//	putpixel(-x, y, color);
+//	putpixel(-y, x, color);
+//	putpixel(-y, -x, color);
+//	putpixel(-x, -y, color);
+//	putpixel(x, -y, color);
+//	putpixel(y, -x, color);
 //
 //	while (x!= y)
 //	{
@@ -168,14 +260,14 @@ void FrameBuffer::angle()
 //		}
 //		++y;
 //
-//		putpixel(y, x, ofColor::green);
-//		putpixel(x, y, ofColor::green);
-//		putpixel(-x, y, ofColor::green);
-//		putpixel(-y, x, ofColor::green);
-//		putpixel(-y, -x, ofColor::green);
-//		putpixel(-x, -y, ofColor::green);
-//		putpixel(x, -y, ofColor::green);
-//		putpixel(y, -x, ofColor::green);
+//		putpixel(y, x, color);
+//		putpixel(x, y, color);
+//		putpixel(-x, y, color);
+//		putpixel(-y, x, color);
+//		putpixel(-y, -x, color);
+//		putpixel(-x, -y, color);
+//		putpixel(x, -y, color);
+//		putpixel(y, -x, color);
 //	} 
 //
 //}

@@ -9,9 +9,10 @@ public:
 	void setup();
 	void update();
 	void draw();
-	void FASTputpixel(const int& x, const int& y, const ofColor color);
+	void putpixel(const int& x, const int& y, const ofColor color);
+	
 	void clear(const ofColor& color);
-	void line(int xo, int yo, int xi, int yi, const ofColor& color);
+	void line(int xo, int yo, int xi, int yi);
 	void angle();
 	/*void circle(const int& h, const int& k, const int& r);
 	void moveTo(const int& Dx, const int& Dy);
@@ -22,5 +23,5 @@ public:
 
 private:
 	ofImage _img;
-	void putpixel(const int& x, const int& y, const ofColor color);
+	void FASTputpixel(const int& x, const int& y, const ofColor color);
 };
